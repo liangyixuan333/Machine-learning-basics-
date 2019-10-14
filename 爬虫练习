@@ -1,0 +1,22 @@
+import requests
+headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134"}
+from lxml import etree
+for i in range(1,101):
+    url = "https://www.runoob.com/python/python-exercise-example%d.html"%i
+    html = requests.get(url,headers =headers).content.decode("utf8")
+    r = etree.HTML(html)
+    title = r.xpath("//div[@id = 'content']/p[2]")
+    t = title[0].xpath("string(.)").strip()
+    code = r.xpath('//div[@class ="hl-main"]')
+    #code = "".join(code)
+    if code:
+       code =code[0].xpath("string(.)")
+       print("1"+code)
+    else:
+        code = r.xpath("//div[@id = 'content']/pre")
+        code =code[0].xpath("string(.)")
+        print("2"+code)
+    with open("pytext.txt", "a") as file:
+        file.write(t + "\n" + code + "\n" + "=" * 88 + "\n")
+        # time.sleep(2)
+    print("打印到第%d个了" % i)
